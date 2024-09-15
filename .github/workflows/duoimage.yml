@@ -31,30 +31,16 @@ jobs:
       run: |
         echo $PWD
         echo $GITHUB_WORKSPACE
-        bash ./build.sh milkv-duo
+        bash ./build.sh milkv-duo-sd
 
-    - name: SSH connection to Actions
-      uses: P3TERX/ssh2actions@v1.0.0
-      if: (github.event.inputs.ssh == 'true' && github.event.inputs.ssh != 'false') || contains(github.event.action, 'ssh')
-      env:
-        TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
-        TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
-
-    - name: Check Image Path
-      id: imgpath
-      run: |
-        echo "path=$(ls ${{ github.workspace }}/out/*.img)" >> "$GITHUB_OUTPUT"
-
-    - name: Generate Hash
-      working-directory: ${{ github.workspace }}/out
-      run: |
-        echo "$(sha256sum *.img)" >> milk-v.hash
+        cp fsbl/build/cv1800b_milkv_duo_sd/fip.bin .
+        cp linux_5.10/build/cv1800b_milkv_duo_sd/arch/riscv/boot/dts/cvitek/cv1800b_milkv_duo_sd.dtb .
 
     - name: Upload Image
       uses: actions/upload-artifact@main
       with:
         name: milkv-duo-${{ github.run_id }}
         path: |
-          ${{ steps.imgpath.outputs.path }}
-          ${{ github.workspace }}/out/milk-v.hash
+          fip.bin
+          cv1800b_milkv_duo_sd.dtb
         if-no-files-found: error
