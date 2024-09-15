@@ -96,6 +96,11 @@ function _build_uboot_env()
   export PANEL_TUNING_PARAM PANEL_LANE_NUM_TUNING_PARAM PANEL_LANE_SWAP_TUNING_PARAM
 }
 
+function _build_opensbi_env()
+{
+  :
+}
+
 function build_fip_pre()
 {(
   print_notice "Run ${FUNCNAME[0]}() function"
